@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador BENKA - IA & Voz</title>
+    <title>Panel BENKA - 10 Categorías y Grilla de 4</title>
     <style>
-        /* ================= DISEÑO ESTILO BOUTIQUE ================= */
         :root {
             --fondo: #FFFCF9;
             --texto: #2C1F16;
@@ -16,34 +15,50 @@
 
         body { margin: 0; padding: 0; background-color: var(--fondo); color: var(--texto); font-family: var(--fuente-textos); }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #E0D8D0; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #E0D8D0; background: #fff; }
         .logo { font-family: var(--fuente-titulos); font-size: 28px; font-weight: bold; letter-spacing: 2px; }
         
-        .categorias { display: flex; gap: 15px; padding: 20px; overflow-x: auto; }
-        .circulo-cat { width: 70px; height: 70px; background-color: var(--gris-foto); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; }
-        .nombre-cat { background: black; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; text-align: center; margin-top: 5px; }
-
-        .seccion-ingresos { padding: 20px; }
-        .seccion-ingresos h2 { text-align: center; font-family: var(--fuente-titulos); color: #4A3B32; margin-bottom: 30px; }
-
-        .grilla-productos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        /* 10 CÍRCULOS DE CATEGORÍAS (Desplazamiento horizontal) */
+        .categorias-container { padding: 15px 20px; border-bottom: 1px solid #E0D8D0; background: #fff; }
+        .categorias-container h3 { font-family: var(--fuente-titulos); font-size: 15px; margin-bottom: 10px; }
+        .categorias-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scroll-behavior: smooth; }
+        .categorias-scroll::-webkit-scrollbar { height: 6px; }
+        .categorias-scroll::-webkit-scrollbar-thumb { background: #d0c5bc; border-radius: 4px; }
         
-        /* TARJETA DE PRODUCTO Y CÁMARA */
-        .producto-card { display: flex; flex-direction: column; gap: 8px; }
-        .foto-placeholder { background-color: var(--gris-foto); aspect-ratio: 3/4; border-radius: 12px; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .foto-placeholder span { color: white; font-size: 60px; font-weight: 300; }
+        .cat-card { display: flex; flex-direction: column; align-items: center; min-width: 75px; }
+        .cat-placeholder { width: 65px; height: 65px; background-color: var(--gris-foto); border-radius: 50%; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .cat-placeholder span { color: white; font-size: 24px; font-weight: 300; }
+        .cat-placeholder img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        
+        .cat-input-nombre { background: black; color: white; border: none; padding: 3px 6px; border-radius: 10px; font-size: 10px; font-weight: bold; text-align: center; margin-top: 5px; width: 75px; cursor: pointer; }
+        .btn-voz-cat { font-size: 9px; background: none; border: 1px solid #ccc; border-radius: 3px; margin-top: 2px; cursor: pointer; padding: 1px 3px; }
+
+        /* GRILLA DE 4 COLUMNAS HACIA ABAJO */
+        .seccion-ingresos { padding: 20px; }
+        .seccion-ingresos h2 { text-align: center; font-family: var(--fuente-titulos); color: #4A3B32; margin-bottom: 20px; }
+        
+        .grilla-productos { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); /* Exactamente 4 imágenes en fila */
+            gap: 15px; 
+        }
+        
+        @media (max-width: 1024px) {
+            .grilla-productos { grid-template-columns: repeat(2, 1fr); } /* Se adapta a 2 en pantallas chicas o celulares */
+        }
+
+        .producto-card { display: flex; flex-direction: column; gap: 6px; background: white; padding: 8px; border-radius: 10px; border: 1px solid #E0D8D0; }
+        .foto-placeholder { background-color: var(--gris-foto); aspect-ratio: 3/4; border-radius: 6px; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; cursor: pointer; }
+        .foto-placeholder span { color: white; font-size: 40px; font-weight: 300; }
         .foto-placeholder img { width: 100%; height: 100%; object-fit: cover; display: none; }
         
-        /* ETIQUETAS */
-        .etiqueta-negra { background: black; color: white; padding: 6px 12px; border-radius: 8px; font-weight: bold; font-size: 14px; width: fit-content; }
-        .titulo-prod { background: black; color: white; }
-        .precio-prod { background: black; color: white; }
+        .etiqueta-negra { background: black; color: white; padding: 4px 8px; border-radius: 5px; font-weight: bold; font-size: 11px; width: 100%; box-sizing: border-box; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
         
-        .contenedor-colores { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
-        .etiqueta-colores { background: black; color: white; font-size: 10px; padding: 4px 8px; border-radius: 5px; font-weight: bold; }
-        .circulo-color { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ccc; }
+        .contenedor-colores { display: flex; align-items: center; gap: 4px; margin-top: 2px; flex-wrap: wrap; }
+        .etiqueta-colores { background: black; color: white; font-size: 9px; padding: 2px 4px; border-radius: 3px; font-weight: bold; }
+        .circulo-color { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #ccc; }
 
-        .btn-microfono { background: #E0D8D0; border: none; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 10px; width: 100%; transition: 0.3s; }
+        .btn-microfono { background: #2C1F16; color: white; border: none; padding: 6px; border-radius: 5px; font-size: 10px; font-weight: bold; cursor: pointer; text-align: center; margin-top: 4px; width: 100%; }
     </style>
 </head>
 <body>
@@ -54,65 +69,96 @@
         <div>👤</div>
     </header>
 
-    <div class="categorias">
-        <div><div class="circulo-cat">✕</div><div class="nombre-cat">Categoría</div></div>
-        <div><div class="circulo-cat">✕</div><div class="nombre-cat">Categoría</div></div>
+    <!-- 10 CÍRCULOS DE CATEGORÍAS -->
+    <div class="categorias-container">
+        <h3>Categorías (Desliza para ver las 10)</h3>
+        <div class="categorias-scroll" id="lista-categorias">
+            <!-- Se generan dinámicamente o por código los 10 círculos -->
+            <script>
+                for(let i = 1; i <= 10; i++) {
+                    document.write(`
+                        <div class="cat-card" id="cat-${i}">
+                            <label class="cat-placeholder">
+                                <input type="file" accept="image/*" capture="environment" hidden onchange="cambiarFotoCat(this, 'cat-${i}')">
+                                <span class="icono-cruz">✕</span>
+                                <img class="preview-cat" src="" alt="Cat">
+                            </label>
+                            <input type="text" class="cat-input-nombre" value="Cat ${i}" onclick="this.select()">
+                            <button class="btn-voz-cat" onclick="dictarNombreCat('cat-${i}')">🎤 Voz</button>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
     </div>
 
+    <!-- GRILLA DE PRODUCTOS DE 4 EN 4 HACIA ABAJO -->
     <section class="seccion-ingresos">
         <h2>Nuevos ingresos</h2>
-        
-        <div class="grilla-productos">
-            <!-- PRODUCTO 1 -->
-            <div class="producto-card" id="prod-1">
-                <!-- El input "capture" abre la cámara en el celular -->
-                <label class="foto-placeholder">
-                    <input type="file" accept="image/*" capture="environment" hidden onchange="procesarImagenConIA(this, 'prod-1')">
-                    <span class="icono-cruz">✕</span>
-                    <img class="preview-img" src="" alt="preview">
-                </label>
-                
-                <div class="etiqueta-negra titulo-prod">Cargar foto...</div>
-                <div class="etiqueta-negra precio-prod">$ ---</div>
-                
-                <div class="contenedor-colores">
-                    <div class="etiqueta-colores">Colores disponibles</div>
-                    <div class="lista-colores"></div>
-                </div>
-
-                <button class="btn-microfono" onclick="dictarPrecioYColores('prod-1')">
-                    🎤 Dictar Precio y Color
-                </button>
-            </div>
-            
-             <!-- PRODUCTO 2 -->
-             <div class="producto-card" id="prod-2">
-                <label class="foto-placeholder">
-                    <input type="file" accept="image/*" capture="environment" hidden onchange="procesarImagenConIA(this, 'prod-2')">
-                    <span class="icono-cruz">✕</span>
-                    <img class="preview-img" src="" alt="preview">
-                </label>
-                <div class="etiqueta-negra titulo-prod">Cargar foto...</div>
-                <div class="etiqueta-negra precio-prod">$ ---</div>
-                <div class="contenedor-colores">
-                    <div class="etiqueta-colores">Colores disponibles</div>
-                    <div class="lista-colores"></div>
-                </div>
-                <button class="btn-microfono" onclick="dictarPrecioYColores('prod-2')">
-                    🎤 Dictar Precio y Color
-                </button>
-            </div>
+        <div class="grilla-productos" id="grilla-productos">
+            <!-- Generamos 8 espacios iniciales de ejemplo organizados de 4 en 4 -->
+            <script>
+                for(let p = 1; p <= 8; p++) {
+                    document.write(`
+                        <div class="producto-card" id="prod-${p}">
+                            <label class="foto-placeholder">
+                                <input type="file" accept="image/*" capture="environment" hidden onchange="procesarImagenConIA(this, 'prod-${p}')">
+                                <span class="icono-cruz">✕</span>
+                                <img class="preview-img" src="" alt="preview">
+                            </label>
+                            <div class="etiqueta-negra titulo-prod">Cargar foto...</div>
+                            <div class="etiqueta-negra precio-prod">$ ---</div>
+                            <div class="contenedor-colores">
+                                <div class="etiqueta-colores">Colores</div>
+                                <div class="lista-colores"></div>
+                            </div>
+                            <button class="btn-microfono" onclick="dictarPrecioYColores('prod-${p}')">🎤 Dictar Precio/Color</button>
+                        </div>
+                    `);
+                }
+            </script>
         </div>
     </section>
 
     <script>
-        // 1. VISIÓN ARTIFICIAL (Subir foto y obtener título)
+        // SEGURIDAD DE ACCESO RESTRINGIDO
+        const clave = prompt("Ingresa la contraseña de administración:");
+        if (clave !== "9090") {
+            alert("Acceso denegado.");
+            window.location.href = "/";
+        }
+
+        function cambiarFotoCat(input, catId) {
+            if (input.files && input.files[0]) {
+                const card = document.getElementById(catId);
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    card.querySelector('.icono-cruz').style.display = 'none';
+                    const img = card.querySelector('.preview-cat');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function dictarNombreCat(catId) {
+            const card = document.getElementById(catId);
+            const inputTxt = card.querySelector('.cat-input-nombre');
+            const ReconocimientoVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!ReconocimientoVoz) return;
+            const reconocimiento = new ReconocimientoVoz();
+            reconocimiento.lang = 'es-AR';
+            reconocimiento.onresult = (event) => {
+                inputTxt.value = event.results[0][0].transcript;
+            };
+            reconocimiento.start();
+        }
+
         async function procesarImagenConIA(input, cardId) {
             if (input.files && input.files[0]) {
                 const card = document.getElementById(cardId);
                 const file = input.files[0];
-                
-                // Mostrar vista previa en la caja gris
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     card.querySelector('.icono-cruz').style.display = 'none';
@@ -122,82 +168,52 @@
                 }
                 reader.readAsDataURL(file);
 
-                // Enviar al servidor para analizar
-                card.querySelector('.titulo-prod').innerText = "🤖 Analizando IA...";
-                
+                card.querySelector('.titulo-prod').innerText = "🤖 IA Analizando...";
                 const formData = new FormData();
                 formData.append('imagen', file);
 
                 try {
-                    const respuesta = await fetch('/api/analizar-imagen', {
-                        method: 'POST',
-                        body: formData
-                    });
+                    const respuesta = await fetch('/api/analizar-imagen', { method: 'POST', body: formData });
                     const data = await respuesta.json();
-                    
-                    // Colocar el título detectado por la IA
                     card.querySelector('.titulo-prod').innerText = data.tituloGenerado;
                 } catch (error) {
-                    card.querySelector('.titulo-prod').innerText = "Error en IA";
+                    card.querySelector('.titulo-prod').innerText = "Error IA";
                 }
             }
         }
 
-        // 2. RECONOCIMIENTO DE VOZ (Precio y Colores)
         function dictarPrecioYColores(cardId) {
             const card = document.getElementById(cardId);
             const btn = card.querySelector('.btn-microfono');
-            
             const ReconocimientoVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!ReconocimientoVoz) {
-                alert("Tu navegador no soporta el dictado por voz. Usa Chrome en Android o Safari en iPhone.");
-                return;
-            }
+            if (!ReconocimientoVoz) return;
 
             const reconocimiento = new ReconocimientoVoz();
-            reconocimiento.lang = 'es-AR'; // Español
+            reconocimiento.lang = 'es-AR';
+            reconocimiento.onstart = () => { btn.innerText = "🔴 Escuchando..."; };
             
-            reconocimiento.onstart = () => {
-                btn.innerText = "🔴 Escuchando...";
-                btn.style.background = "#ffcccc";
-            };
-
             reconocimiento.onresult = (event) => {
                 const texto = event.results[0][0].transcript.toLowerCase();
-                console.log("El cliente dictó:", texto);
-                
-                // Extraer el precio (busca cualquier número dicho)
                 const numeros = texto.match(/\d+/g);
                 if (numeros) {
                     card.querySelector('.precio-prod').innerText = "$" + numeros.join("");
                 }
 
-                // Extraer colores
                 const listaColores = card.querySelector('.lista-colores');
-                listaColores.innerHTML = ""; // Limpiar anteriores
-                
-                const coloresDiccionario = {
-                    "rosado": "#FFC0CB", "rosa": "#FFC0CB",
-                    "celeste": "#ADD8E6", "azul": "#0000FF",
-                    "verde": "#8FBC8F", "blanco": "#FFFFFF",
-                    "negro": "#000000", "rojo": "#FF0000",
-                    "beige": "#F5F5DC", "amarillo": "#FFD700"
-                };
+                listaColores.innerHTML = "";
+                const coloresDic = { "rosado": "#FFC0CB", "rosa": "#FFC0CB", "celeste": "#ADD8E6", "verde": "#8FBC8F", "blanco": "#FFFFFF", "negro": "#000000", "beige": "#F5F5DC" };
 
-                for (let color in coloresDiccionario) {
+                for (let color in coloresDic) {
                     if (texto.includes(color)) {
                         const circulo = document.createElement('div');
                         circulo.className = 'circulo-color';
-                        circulo.style.backgroundColor = coloresDiccionario[color];
+                        circulo.style.backgroundColor = coloresDic[color];
                         listaColores.appendChild(circulo);
                     }
                 }
-
-                btn.innerText = "🎤 ¡Dictado Exitoso!";
-                btn.style.background = "#d4edda";
-                setTimeout(() => { btn.innerText = "🎤 Dictar Precio y Color"; btn.style.background = "#E0D8D0"; }, 3000);
+                btn.innerText = "🎤 ¡Listo!";
+                setTimeout(() => { btn.innerText = "🎤 Dictar Precio/Color"; }, 2500);
             };
-
             reconocimiento.start();
         }
     </script>
