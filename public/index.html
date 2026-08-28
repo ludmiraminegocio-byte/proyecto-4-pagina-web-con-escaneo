@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>WildPeak Clon</title>
+    <style>
+        /* Reset básico y tipografía */
+        body { margin: 0; font-family: 'Georgia', serif; color: #333; }
+        h1, h2, h3 { font-weight: normal; }
+        
+        /* Menú superior simple */
+        header { display: flex; justify-content: space-between; padding: 20px 40px; border-bottom: 1px solid #eee; }
+        .logo { font-size: 24px; font-weight: bold; }
+
+        /* Sección Hero (La foto grande principal) */
+        .hero {
+            background-image: url('https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80'); 
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        .hero h1 { font-size: 50px; font-style: italic; margin-bottom: 10px; }
+        .hero button { padding: 12px 30px; font-size: 14px; cursor: pointer; border: none; background: white; color: black; }
+
+        /* Sección de Productos */
+        .seccion-tienda { padding: 50px 40px; }
+        .seccion-tienda h2 { font-size: 32px; margin-bottom: 30px; }
+
+        /* La Grilla que acomoda los productos */
+        .grilla-productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        /* Diseño de cada tarjeta de producto */
+        .producto { text-align: left; font-family: sans-serif; }
+        .producto img { width: 100%; height: 350px; object-fit: cover; background: #e5e5e5; }
+        .producto h3 { font-size: 14px; margin: 10px 0 5px 0; color: #111; }
+        .producto p { margin: 0; font-size: 14px; font-weight: bold; color: #555; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="menu">HOME | SHOP</div>
+        <div class="logo">WildPeak</div>
+        <div class="iconos">Buscar | Carrito</div>
+    </header>
+
+    <div class="hero">
+        <p>THE MINNA MINIMALIST</p>
+        <h1>Making you to shine</h1>
+        <button>SHOP NOW</button>
+    </div>
+
+    <div class="seccion-tienda">
+        <h2>So, what else is new?</h2>
+        
+        <div class="grilla-productos" id="contenedor-productos">
+            <!-- Aquí JavaScript inyectará los productos -->
+        </div>
+    </div>
+
+    <script>
+        async function cargarProductos() {
+            const contenedor = document.getElementById('contenedor-productos');
+            
+            try {
+                const respuesta = await fetch('/api/productos');
+                const productos = await respuesta.json();
+
+                contenedor.innerHTML = ''; // Limpiar
+
+                productos.forEach(prod => {
+                    const div = document.createElement('div');
+                    div.className = 'producto';
+                    
+                    // Estructura HTML de cada tarjeta de producto
+                    div.innerHTML = `
+                        <img src="/uploads/${prod.imagen}" alt="${prod.titulo}">
+                        <h3>${prod.titulo}</h3>
+                        <p>$${prod.precio}</p>
+                    `;
+                    contenedor.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Error cargando productos", error);
+            }
+        }
+
+        cargarProductos();
+    </script>
+</body>
+</html>
