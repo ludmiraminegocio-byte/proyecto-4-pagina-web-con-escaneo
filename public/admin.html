@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel BENKA - 10 Categorías y Grilla de 4</title>
+    <title>BENKA - Panel de Administración</title>
     <style>
         :root {
             --fondo: #FFFCF9;
@@ -18,12 +18,10 @@
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #E0D8D0; background: #fff; }
         .logo { font-family: var(--fuente-titulos); font-size: 28px; font-weight: bold; letter-spacing: 2px; }
         
-        /* 10 CÍRCULOS DE CATEGORÍAS (Desplazamiento horizontal) */
+        /* 10 CÍRCULOS DE CATEGORÍAS */
         .categorias-container { padding: 15px 20px; border-bottom: 1px solid #E0D8D0; background: #fff; }
         .categorias-container h3 { font-family: var(--fuente-titulos); font-size: 15px; margin-bottom: 10px; }
         .categorias-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scroll-behavior: smooth; }
-        .categorias-scroll::-webkit-scrollbar { height: 6px; }
-        .categorias-scroll::-webkit-scrollbar-thumb { background: #d0c5bc; border-radius: 4px; }
         
         .cat-card { display: flex; flex-direction: column; align-items: center; min-width: 75px; }
         .cat-placeholder { width: 65px; height: 65px; background-color: var(--gris-foto); border-radius: 50%; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -39,12 +37,12 @@
         
         .grilla-productos { 
             display: grid; 
-            grid-template-columns: repeat(4, 1fr); /* Exactamente 4 imágenes en fila */
+            grid-template-columns: repeat(4, 1fr); /* 4 fotos en fila */
             gap: 15px; 
         }
         
         @media (max-width: 1024px) {
-            .grilla-productos { grid-template-columns: repeat(2, 1fr); } /* Se adapta a 2 en pantallas chicas o celulares */
+            .grilla-productos { grid-template-columns: repeat(2, 1fr); } /* En celulares se adapta a 2 */
         }
 
         .producto-card { display: flex; flex-direction: column; gap: 6px; background: white; padding: 8px; border-radius: 10px; border: 1px solid #E0D8D0; }
@@ -52,7 +50,7 @@
         .foto-placeholder span { color: white; font-size: 40px; font-weight: 300; }
         .foto-placeholder img { width: 100%; height: 100%; object-fit: cover; display: none; }
         
-        .etiqueta-negra { background: black; color: white; padding: 4px 8px; border-radius: 5px; font-weight: bold; font-size: 11px; width: 100%; box-sizing: border-box; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .etiqueta-negra { background: black; color: white; padding: 4px 8px; border-radius: 5px; font-weight: bold; font-size: 11px; width: 100%; box-sizing: border-box; }
         
         .contenedor-colores { display: flex; align-items: center; gap: 4px; margin-top: 2px; flex-wrap: wrap; }
         .etiqueta-colores { background: black; color: white; font-size: 9px; padding: 2px 4px; border-radius: 3px; font-weight: bold; }
@@ -72,8 +70,7 @@
     <!-- 10 CÍRCULOS DE CATEGORÍAS -->
     <div class="categorias-container">
         <h3>Categorías (Desliza para ver las 10)</h3>
-        <div class="categorias-scroll" id="lista-categorias">
-            <!-- Se generan dinámicamente o por código los 10 círculos -->
+        <div class="categorias-scroll">
             <script>
                 for(let i = 1; i <= 10; i++) {
                     document.write(`
@@ -83,7 +80,7 @@
                                 <span class="icono-cruz">✕</span>
                                 <img class="preview-cat" src="" alt="Cat">
                             </label>
-                            <input type="text" class="cat-input-nombre" value="Cat ${i}" onclick="this.select()">
+                            <input type="text" class="cat-input-nombre" value="Cat ${i}">
                             <button class="btn-voz-cat" onclick="dictarNombreCat('cat-${i}')">🎤 Voz</button>
                         </div>
                     `);
@@ -92,11 +89,10 @@
         </div>
     </div>
 
-    <!-- GRILLA DE PRODUCTOS DE 4 EN 4 HACIA ABAJO -->
+    <!-- GRILLA DE PRODUCTOS DE 4 EN 4 -->
     <section class="seccion-ingresos">
         <h2>Nuevos ingresos</h2>
-        <div class="grilla-productos" id="grilla-productos">
-            <!-- Generamos 8 espacios iniciales de ejemplo organizados de 4 en 4 -->
+        <div class="grilla-productos">
             <script>
                 for(let p = 1; p <= 8; p++) {
                     document.write(`
@@ -121,12 +117,9 @@
     </section>
 
     <script>
-        // SEGURIDAD DE ACCESO RESTRINGIDO
-        const clave = prompt("Ingresa la contraseña de administración:");
-        if (clave !== "9090") {
-            alert("Acceso denegado.");
-            window.location.href = "/";
-        }
+        // Seguridad opcional para el panel
+        const clave = prompt("Contraseña de administración (escribe benka2026):");
+        if (clave !== "benka2026") { alert("Contraseña incorrecta"); }
 
         function cambiarFotoCat(input, catId) {
             if (input.files && input.files[0]) {
@@ -145,14 +138,12 @@
         function dictarNombreCat(catId) {
             const card = document.getElementById(catId);
             const inputTxt = card.querySelector('.cat-input-nombre');
-            const ReconocimientoVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!ReconocimientoVoz) return;
-            const reconocimiento = new ReconocimientoVoz();
-            reconocimiento.lang = 'es-AR';
-            reconocimiento.onresult = (event) => {
-                inputTxt.value = event.results[0][0].transcript;
-            };
-            reconocimiento.start();
+            const RecVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!RecVoz) return;
+            const rec = new RecVoz();
+            rec.lang = 'es-AR';
+            rec.onresult = (e) => { inputTxt.value = e.results[0][0].transcript; };
+            rec.start();
         }
 
         async function procesarImagenConIA(input, cardId) {
@@ -173,10 +164,10 @@
                 formData.append('imagen', file);
 
                 try {
-                    const respuesta = await fetch('/api/analizar-imagen', { method: 'POST', body: formData });
-                    const data = await respuesta.json();
+                    const res = await fetch('/api/analizar-imagen', { method: 'POST', body: formData });
+                    const data = await res.json();
                     card.querySelector('.titulo-prod').innerText = data.tituloGenerado;
-                } catch (error) {
+                } catch (e) {
                     card.querySelector('.titulo-prod').innerText = "Error IA";
                 }
             }
@@ -185,36 +176,33 @@
         function dictarPrecioYColores(cardId) {
             const card = document.getElementById(cardId);
             const btn = card.querySelector('.btn-microfono');
-            const ReconocimientoVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!ReconocimientoVoz) return;
-
-            const reconocimiento = new ReconocimientoVoz();
-            reconocimiento.lang = 'es-AR';
-            reconocimiento.onstart = () => { btn.innerText = "🔴 Escuchando..."; };
+            const RecVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!RecVoz) return;
+            const rec = new RecVoz();
+            rec.lang = 'es-AR';
+            rec.onstart = () => { btn.innerText = "🔴 Escuchando..."; };
             
-            reconocimiento.onresult = (event) => {
-                const texto = event.results[0][0].transcript.toLowerCase();
-                const numeros = texto.match(/\d+/g);
-                if (numeros) {
-                    card.querySelector('.precio-prod').innerText = "$" + numeros.join("");
-                }
+            rec.onresult = (e) => {
+                const texto = e.results[0][0].transcript.toLowerCase();
+                const nums = texto.match(/\d+/g);
+                if (nums) { card.querySelector('.precio-prod').innerText = "$" + nums.join(""); }
 
                 const listaColores = card.querySelector('.lista-colores');
                 listaColores.innerHTML = "";
                 const coloresDic = { "rosado": "#FFC0CB", "rosa": "#FFC0CB", "celeste": "#ADD8E6", "verde": "#8FBC8F", "blanco": "#FFFFFF", "negro": "#000000", "beige": "#F5F5DC" };
 
-                for (let color in coloresDic) {
-                    if (texto.includes(color)) {
+                for (let c in coloresDic) {
+                    if (texto.includes(c)) {
                         const circulo = document.createElement('div');
                         circulo.className = 'circulo-color';
-                        circulo.style.backgroundColor = coloresDic[color];
+                        circulo.style.backgroundColor = coloresDic[c];
                         listaColores.appendChild(circulo);
                     }
                 }
                 btn.innerText = "🎤 ¡Listo!";
                 setTimeout(() => { btn.innerText = "🎤 Dictar Precio/Color"; }, 2500);
             };
-            reconocimiento.start();
+            rec.start();
         }
     </script>
 </body>
