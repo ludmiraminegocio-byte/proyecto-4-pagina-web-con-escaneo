@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BENKA - Tienda Oficial</title>
+    <style>
+        :root { --fondo: #FFFCF9; --texto: #2C1F16; --fuente-titulos: 'Georgia', serif; --fuente-textos: 'Helvetica Neue', Arial, sans-serif; }
+        body { margin: 0; padding: 0; background-color: var(--fondo); color: var(--texto); font-family: var(--fuente-textos); }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #E0D8D0; background: #fff; }
+        .logo { font-family: var(--fuente-titulos); font-size: 28px; font-weight: bold; letter-spacing: 2px; }
+        
+        .categorias-container { padding: 15px 20px; border-bottom: 1px solid #E0D8D0; background: #fff; }
+        .categorias-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 5px; scroll-behavior: smooth; }
+        .cat-item { display: flex; flex-direction: column; align-items: center; min-width: 75px; text-decoration: none; color: var(--texto); }
+        .cat-circulo { width: 65px; height: 65px; background-color: #ddd; border-radius: 50%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .cat-circulo img { width: 100%; height: 100%; object-fit: cover; }
+        .cat-nombre { background: black; color: white; padding: 3px 6px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-top: 5px; text-align: center; width: 75px; }
+        
+        .seccion { padding: 20px; }
+        .seccion h2 { text-align: center; font-family: var(--fuente-titulos); margin-bottom: 20px; }
+        
+        .grilla { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); /* 4 fotos por fila */
+            gap: 15px; 
+        }
+        @media(max-width: 1024px) { .grilla { grid-template-columns: repeat(2, 1fr); } }
+
+        .producto { background: white; padding: 8px; border-radius: 10px; border: 1px solid #E0D8D0; display: flex; flex-direction: column; gap: 6px; }
+        .foto { aspect-ratio: 3/4; background: #eee; border-radius: 6px; overflow: hidden; }
+        .foto img { width: 100%; height: 100%; object-fit: cover; }
+        .etiq { background: black; color: white; padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <div>☰</div>
+        <div class="logo">BENKA</div>
+        <div>🛒</div>
+    </header>
+
+    <!-- 20 CÍRCULOS DE CATEGORÍAS -->
+    <div class="categorias-container">
+        <div class="categorias-scroll">
+            <script>
+                for(let i = 1; i <= 20; i++) {
+                    document.write(`
+                        <a href="#" class="cat-item">
+                            <div class="cat-circulo"></div>
+                            <div class="cat-nombre">Categoría ${i}</div>
+                        </a>
+                    `);
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- 6 LÍNEAS DE PRODUCTOS (24 espacios en total, de 4 en 4) -->
+    <section class="seccion">
+        <h2>Nuevos Ingresos</h2>
+        <div class="grilla">
+            <script>
+                for(let p = 1; p <= 24; p++) {
+                    document.write(`
+                        <div class="producto">
+                            <div class="foto"></div>
+                            <div class="etiq">Prenda ${p}</div>
+                            <div class="etiq">$ 0.00</div>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+    </section>
+</body>
+</html>

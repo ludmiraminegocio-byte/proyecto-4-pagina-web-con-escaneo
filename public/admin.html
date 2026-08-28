@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BENKA - Panel Administrativo</title>
+    <style>
+        :root { --fondo: #FFFCF9; --texto: #2C1F16; --gris-foto: #B3B3B3; --fuente-titulos: 'Georgia', serif; --fuente-textos: 'Helvetica Neue', Arial, sans-serif; }
+        body { margin: 0; padding: 0; background-color: var(--fondo); color: var(--texto); font-family: var(--fuente-textos); }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #E0D8D0; background: #fff; }
+        .logo { font-family: var(--fuente-titulos); font-size: 28px; font-weight: bold; letter-spacing: 2px; }
+        
+        .categorias-container { padding: 15px 20px; border-bottom: 1px solid #E0D8D0; background: #fff; }
+        .categorias-container h3 { font-family: var(--fuente-titulos); font-size: 15px; margin-bottom: 10px; }
+        .categorias-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scroll-behavior: smooth; }
+        
+        .cat-card { display: flex; flex-direction: column; align-items: center; min-width: 75px; }
+        .cat-placeholder { width: 65px; height: 65px; background-color: var(--gris-foto); border-radius: 50%; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .cat-placeholder span { color: white; font-size: 24px; font-weight: 300; }
+        .cat-placeholder img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        
+        .cat-input-nombre { background: black; color: white; border: none; padding: 3px 6px; border-radius: 10px; font-size: 10px; font-weight: bold; text-align: center; margin-top: 5px; width: 75px; cursor: pointer; }
+        .btn-voz-cat { font-size: 9px; background: none; border: 1px solid #ccc; border-radius: 3px; margin-top: 2px; cursor: pointer; padding: 1px 3px; }
+
+        .seccion-ingresos { padding: 20px; }
+        .seccion-ingresos h2 { text-align: center; font-family: var(--fuente-titulos); color: #4A3B32; margin-bottom: 20px; }
+        
+        .grilla-productos { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px; 
+        }
+        @media (max-width: 1024px) { .grilla-productos { grid-template-columns: repeat(2, 1fr); } }
+
+        .producto-card { display: flex; flex-direction: column; gap: 5px; background: white; padding: 8px; border-radius: 10px; border: 1px solid #E0D8D0; }
+        .foto-placeholder { background-color: var(--gris-foto); aspect-ratio: 3/4; border-radius: 6px; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; cursor: pointer; }
+        .foto-placeholder span { color: white; font-size: 40px; font-weight: 300; }
+        .foto-placeholder img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        
+        .etiqueta-negra { background: black; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; width: 100%; box-sizing: border-box; text-align: center; }
+        
+        .seccion-datos { display: flex; flex-direction: column; gap: 4px; font-size: 10px; }
+        .fila-item { display: flex; align-items: center; justify-content: space-between; background: #f7f3f0; padding: 3px 6px; border-radius: 4px; border: 1px solid #E0D8D0; }
+        
+        .contenedor-colores { display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
+        .circulo-color { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #999; }
+        
+        .contenedor-talles { display: flex; gap: 3px; flex-wrap: wrap; }
+        .talle-badge { background: #2C1F16; color: white; font-size: 9px; padding: 1px 4px; border-radius: 3px; }
+
+        .btn-microfono { background: #2C1F16; color: white; border: none; padding: 5px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; text-align: center; margin-top: 2px; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>☰</div>
+        <div class="logo">BENKA - ADMIN</div>
+        <div>🔒</div>
+    </header>
+
+    <!-- 20 CÍRCULOS DE CATEGORÍAS -->
+    <div class="categorias-container">
+        <h3>20 Categorías (Desliza para ver todas)</h3>
+        <div class="categorias-scroll">
+            <script>
+                for(let i = 1; i <= 20; i++) {
+                    document.write(`
+                        <div class="cat-card" id="cat-${i}">
+                            <label class="cat-placeholder">
+                                <input type="file" accept="image/*" capture="environment" hidden onchange="cambiarFotoCat(this, 'cat-${i}')">
+                                <span class="icono-cruz">✕</span>
+                                <img class="preview-cat" src="" alt="Cat">
+                            </label>
+                            <input type="text" class="cat-input-nombre" value="Cat ${i}">
+                            <button class="btn-voz-cat" onclick="dictarNombreCat('cat-${i}')">🎤 Voz</button>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- 6 LÍNEAS DE PRODUCTOS CON COLORES Y TALLES -->
+    <section class="seccion-ingresos">
+        <h2>Gestión de Nuevos Ingresos (6 Líneas)</h2>
+        <div class="grilla-productos">
+            <script>
+                for(let p = 1; p <= 24; p++) {
+                    document.write(`
+                        <div class="producto-card" id="prod-${p}">
+                            <label class="foto-placeholder">
+                                <input type="file" accept="image/*" capture="environment" hidden onchange="procesarImagenConIA(this, 'prod-${p}')">
+                                <span class="icono-cruz">✕</span>
+                                <img class="preview-img" src="" alt="preview">
+                            </label>
+                            <div class="etiqueta-negra titulo-prod">Cargar foto...</div>
+                            <div class="etiqueta-negra precio-prod">$ 0.00</div>
+                            
+                            <div class="seccion-datos">
+                                <div class="fila-item">
+                                    <span>Colores:</span>
+                                    <div class="contenedor-colores lista-colores"><span>---</span></div>
+                                </div>
+                                <div class="fila-item">
+                                    <span>Talles:</span>
+                                    <div class="contenedor-talles lista-talles"><span>---</span></div>
+                                </div>
+                            </div>
+
+                            <button class="btn-microfono" onclick="dictarDetallesProducto('prod-${p}')">🎤 Dictar Precio, Color y Talles</button>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+    </section>
+
+    <script>
+        const clave = prompt("Ingresa la contraseña de administración (benka2026):");
+        if (clave !== "benka2026") { alert("Contraseña incorrecta"); window.location.href = "/"; }
+
+        function cambiarFotoCat(input, catId) {
+            if (input.files && input.files[0]) {
+                const card = document.getElementById(catId);
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    card.querySelector('.icono-cruz').style.display = 'none';
+                    const img = card.querySelector('.preview-cat');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function dictarNombreCat(catId) {
+            const card = document.getElementById(catId);
+            const inputTxt = card.querySelector('.cat-input-nombre');
+            const RecVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!RecVoz) return;
+            const rec = new RecVoz();
+            rec.lang = 'es-AR';
+            rec.onresult = (e) => { inputTxt.value = e.results[0][0].transcript; };
+            rec.start();
+        }
+
+        async function procesarImagenConIA(input, cardId) {
+            if (input.files && input.files[0]) {
+                const card = document.getElementById(cardId);
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    card.querySelector('.icono-cruz').style.display = 'none';
+                    const img = card.querySelector('.preview-img');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+
+                card.querySelector('.titulo-prod').innerText = "🤖 IA Analizando...";
+                const formData = new FormData();
+                formData.append('imagen', file);
+
+                try {
+                    const res = await fetch('/api/analizar-imagen', { method: 'POST', body: formData });
+                    const data = await res.json();
+                    card.querySelector('.titulo-prod').innerText = data.tituloGenerado;
+                } catch (e) {
+                    card.querySelector('.titulo-prod').innerText = "Error IA";
+                }
+            }
+        }
+
+        function dictarDetallesProducto(cardId) {
+            const card = document.getElementById(cardId);
+            const btn = card.querySelector('.btn-microfono');
+            const RecVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!RecVoz) return;
+            const rec = new RecVoz();
+            rec.lang = 'es-AR';
+            rec.onstart = () => { btn.innerText = "🔴 Escuchando..."; };
+            
+            rec.onresult = (e) => {
+                const texto = e.results[0][0].transcript.toLowerCase();
+                
+                // 1. Extraer Precio
+                const nums = texto.match(/\d+/g);
+                if (nums) { card.querySelector('.precio-prod').innerText = "$" + nums.join(""); }
+
+                // 2. Extraer Colores y generar círculos
+                const listaColores = card.querySelector('.lista-colores');
+                listaColores.innerHTML = "";
+                const coloresDic = { 
+                    "rosado": "#FFC0CB", "rosa": "#FFC0CB", "celeste": "#ADD8E6", 
+                    "verde": "#8FBC8F", "blanco": "#FFFFFF", "negro": "#000000", 
+                    "beige": "#F5F5DC", "rojo": "#FF0000", "azul": "#0000FF", "gris": "#808080" 
+                };
+                let encontroColor = false;
+                for (let c in coloresDic) {
+                    if (texto.includes(c)) {
+                        encontroColor = true;
+                        const circulo = document.createElement('div');
+                        circulo.className = 'circulo-color';
+                        circulo.style.backgroundColor = coloresDic[c];
+                        listaColores.appendChild(circulo);
+                    }
+                }
+                if (!encontroColor) listaColores.innerHTML = "<span>---</span>";
+
+                // 3. Extraer Talles (S, M, L, XL, o números del 34 al 44)
+                const listaTalles = card.querySelector('.lista-talles');
+                listaTalles.innerHTML = "";
+                const tallesDisponibles = ["s", "m", "l", "xl", "xxl", "34", "36", "38", "40", "42", "44", "único"];
+                let encontroTalle = false;
+                
+                tallesDisponibles.forEach(t => {
+                    // Verificamos si la palabra o número del talle está en el dictado
+                    if (new RegExp(`\\b${t}\\b`).test(texto)) {
+                        encontroTalle = true;
+                        const badge = document.createElement('div');
+                        badge.className = 'talle-badge';
+                        badge.innerText = t.toUpperCase();
+                        listaTalles.appendChild(badge);
+                    }
+                });
+                if (!encontroTalle) listaTalles.innerHTML = "<span>---</span>";
+
+                btn.innerText = "🎤 ¡Listo!";
+                setTimeout(() => { btn.innerText = "🎤 Dictar Precio, Color y Talles"; }, 2500);
+            };
+            rec.start();
+        }
+    </script>
+</body>
+</html>
