@@ -3,125 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador de Catálogo - IA y Voz</title>
+    <title>Administrador BENKA - IA & Voz</title>
     <style>
-        /* ================= CSS: DISEÑO ESTILO BOUTIQUE ================= */
+        /* ================= DISEÑO ESTILO BOUTIQUE ================= */
         :root {
             --fondo: #FFFCF9;
             --texto: #2C1F16;
             --gris-foto: #B3B3B3;
             --fuente-titulos: 'Georgia', serif;
-            --fuente-textos: 'Helvetica Neue', sans-serif;
+            --fuente-textos: 'Helvetica Neue', Arial, sans-serif;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--fondo);
-            color: var(--texto);
-            font-family: var(--fuente-textos);
-        }
+        body { margin: 0; padding: 0; background-color: var(--fondo); color: var(--texto); font-family: var(--fuente-textos); }
 
-        /* Encabezado */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #E0D8D0;
-        }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #E0D8D0; }
         .logo { font-family: var(--fuente-titulos); font-size: 28px; font-weight: bold; letter-spacing: 2px; }
-        .iconos { font-size: 20px; cursor: pointer; }
+        
+        .categorias { display: flex; gap: 15px; padding: 20px; overflow-x: auto; }
+        .circulo-cat { width: 70px; height: 70px; background-color: var(--gris-foto); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; }
+        .nombre-cat { background: black; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; text-align: center; margin-top: 5px; }
 
-        /* Categorías (Círculos superiores) */
-        .categorias {
-            display: flex;
-            gap: 15px;
-            padding: 20px;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        .categoria {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .circulo-cat {
-            width: 70px; height: 70px;
-            background-color: var(--gris-foto);
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            color: white; font-size: 30px; cursor: pointer;
-        }
-        .nombre-cat { background: black; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
-
-        /* Sección de Productos */
         .seccion-ingresos { padding: 20px; }
         .seccion-ingresos h2 { text-align: center; font-family: var(--fuente-titulos); color: #4A3B32; margin-bottom: 30px; }
 
-        .grilla-productos {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 columnas como en tu foto */
-            gap: 20px;
-        }
-
-        /* Tarjeta de Producto */
-        .producto-card { display: flex; flex-direction: column; gap: 10px; }
+        .grilla-productos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         
-        /* El recuadro gris que funciona como botón de cámara */
-        .foto-placeholder {
-            background-color: var(--gris-foto);
-            aspect-ratio: 3/4; /* Proporción rectangular de ropa */
-            border-radius: 12px;
-            display: flex; justify-content: center; align-items: center;
-            position: relative; overflow: hidden; cursor: pointer;
-        }
+        /* TARJETA DE PRODUCTO Y CÁMARA */
+        .producto-card { display: flex; flex-direction: column; gap: 8px; }
+        .foto-placeholder { background-color: var(--gris-foto); aspect-ratio: 3/4; border-radius: 12px; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .foto-placeholder span { color: white; font-size: 60px; font-weight: 300; }
         .foto-placeholder img { width: 100%; height: 100%; object-fit: cover; display: none; }
         
-        /* Textos del producto */
-        .info-producto { background: black; color: white; padding: 5px 10px; border-radius: 8px; font-weight: bold; font-size: 14px; width: fit-content; margin-bottom: 5px;}
+        /* ETIQUETAS */
+        .etiqueta-negra { background: black; color: white; padding: 6px 12px; border-radius: 8px; font-weight: bold; font-size: 14px; width: fit-content; }
+        .titulo-prod { background: black; color: white; }
+        .precio-prod { background: black; color: white; }
         
-        /* Colores disponibles */
-        .contenedor-colores { display: flex; align-items: center; gap: 5px; margin-top: 10px; }
-        .etiqueta-colores { background: black; color: white; font-size: 10px; padding: 3px 6px; border-radius: 5px; font-weight: bold;}
-        .circulo-color { width: 15px; height: 15px; border-radius: 50%; border: 1px solid #ccc; }
+        .contenedor-colores { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+        .etiqueta-colores { background: black; color: white; font-size: 10px; padding: 4px 8px; border-radius: 5px; font-weight: bold; }
+        .circulo-color { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ccc; }
 
-        /* Botón de micrófono */
-        .btn-microfono { background: #E0D8D0; border: none; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 10px; width: 100%;}
+        .btn-microfono { background: #E0D8D0; border: none; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 10px; width: 100%; transition: 0.3s; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="iconos">☰ 🔍</div>
+        <div>☰</div>
         <div class="logo">BENKA</div>
-        <div class="iconos">👤 🛒</div>
+        <div>👤</div>
     </header>
 
     <div class="categorias">
-        <!-- Círculos superiores -->
-        <div class="categoria"><div class="circulo-cat">✕</div><div class="nombre-cat">Categoría</div></div>
-        <div class="categoria"><div class="circulo-cat">✕</div><div class="nombre-cat">Categoría</div></div>
-        <div class="categoria"><div class="circulo-cat">✕</div><div class="nombre-cat">Categoría</div></div>
+        <div><div class="circulo-cat">✕</div><div class="nombre-cat">Categoría</div></div>
+        <div><div class="circulo-cat">✕</div><div class="nombre-cat">Categoría</div></div>
     </div>
 
     <section class="seccion-ingresos">
         <h2>Nuevos ingresos</h2>
         
         <div class="grilla-productos">
-            <!-- TARJETA DE PRODUCTO 1 -->
+            <!-- PRODUCTO 1 -->
             <div class="producto-card" id="prod-1">
+                <!-- El input "capture" abre la cámara en el celular -->
                 <label class="foto-placeholder">
-                    <!-- Este input abre la cámara en celulares -->
-                    <input type="file" accept="image/*" capture="environment" hidden onchange="procesarImagen(this, 'prod-1')">
+                    <input type="file" accept="image/*" capture="environment" hidden onchange="procesarImagenConIA(this, 'prod-1')">
                     <span class="icono-cruz">✕</span>
                     <img class="preview-img" src="" alt="preview">
                 </label>
                 
-                <div class="info-producto titulo-prod">Cargar foto...</div>
-                <div class="info-producto precio-prod">$ ---</div>
+                <div class="etiqueta-negra titulo-prod">Cargar foto...</div>
+                <div class="etiqueta-negra precio-prod">$ ---</div>
                 
                 <div class="contenedor-colores">
                     <div class="etiqueta-colores">Colores disponibles</div>
@@ -132,107 +84,118 @@
                     🎤 Dictar Precio y Color
                 </button>
             </div>
-
-            <!-- Puedes duplicar la tarjeta arriba para tener varios recuadros en la grilla -->
+            
+             <!-- PRODUCTO 2 -->
+             <div class="producto-card" id="prod-2">
+                <label class="foto-placeholder">
+                    <input type="file" accept="image/*" capture="environment" hidden onchange="procesarImagenConIA(this, 'prod-2')">
+                    <span class="icono-cruz">✕</span>
+                    <img class="preview-img" src="" alt="preview">
+                </label>
+                <div class="etiqueta-negra titulo-prod">Cargar foto...</div>
+                <div class="etiqueta-negra precio-prod">$ ---</div>
+                <div class="contenedor-colores">
+                    <div class="etiqueta-colores">Colores disponibles</div>
+                    <div class="lista-colores"></div>
+                </div>
+                <button class="btn-microfono" onclick="dictarPrecioYColores('prod-2')">
+                    🎤 Dictar Precio y Color
+                </button>
+            </div>
         </div>
     </section>
 
     <script>
-        /* ================= JAVASCRIPT: LÓGICA DE IA Y VOZ ================= */
-
-        // 1. Procesar la imagen subida/escaneada y simular IA para el título
-        async function procesarImagen(input, cardId) {
+        // 1. VISIÓN ARTIFICIAL (Subir foto y obtener título)
+        async function procesarImagenConIA(input, cardId) {
             if (input.files && input.files[0]) {
                 const card = document.getElementById(cardId);
-                const reader = new FileReader();
+                const file = input.files[0];
                 
-                // Mostrar la foto que el cliente acaba de tomar
+                // Mostrar vista previa en la caja gris
+                const reader = new FileReader();
                 reader.onload = function(e) {
                     card.querySelector('.icono-cruz').style.display = 'none';
                     const img = card.querySelector('.preview-img');
                     img.src = e.target.result;
                     img.style.display = 'block';
                 }
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
 
-                // Aquí simulo que enviamos la foto a tu servidor (Node.js) para que la IA la analice
-                card.querySelector('.titulo-prod').innerText = "Analizando con IA...";
+                // Enviar al servidor para analizar
+                card.querySelector('.titulo-prod').innerText = "🤖 Analizando IA...";
                 
-                setTimeout(() => {
-                    // Esto deberías reemplazarlo por un fetch() a tu API real de OpenAI/Vision
-                    card.querySelector('.titulo-prod').innerText = "Blusa con volados"; 
-                }, 1500);
+                const formData = new FormData();
+                formData.append('imagen', file);
+
+                try {
+                    const respuesta = await fetch('/api/analizar-imagen', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await respuesta.json();
+                    
+                    // Colocar el título detectado por la IA
+                    card.querySelector('.titulo-prod').innerText = data.tituloGenerado;
+                } catch (error) {
+                    card.querySelector('.titulo-prod').innerText = "Error en IA";
+                }
             }
         }
 
-        // 2. Reconocimiento de Voz (Precio y Colores)
+        // 2. RECONOCIMIENTO DE VOZ (Precio y Colores)
         function dictarPrecioYColores(cardId) {
             const card = document.getElementById(cardId);
             const btn = card.querySelector('.btn-microfono');
             
-            // Usar la API de voz nativa del navegador
             const ReconocimientoVoz = window.SpeechRecognition || window.webkitSpeechRecognition;
-            
             if (!ReconocimientoVoz) {
-                alert("Tu navegador no soporta el dictado por voz. Usa Chrome en Android o Safari.");
+                alert("Tu navegador no soporta el dictado por voz. Usa Chrome en Android o Safari en iPhone.");
                 return;
             }
 
             const reconocimiento = new ReconocimientoVoz();
-            reconocimiento.lang = 'es-AR'; // Español Argentina
+            reconocimiento.lang = 'es-AR'; // Español
             
-            reconocimiento.onstart = function() {
+            reconocimiento.onstart = () => {
                 btn.innerText = "🔴 Escuchando...";
                 btn.style.background = "#ffcccc";
             };
 
-            reconocimiento.onresult = function(event) {
-                const textoEscuchado = event.results[0][0].transcript.toLowerCase();
-                console.log("El cliente dijo:", textoEscuchado);
+            reconocimiento.onresult = (event) => {
+                const texto = event.results[0][0].transcript.toLowerCase();
+                console.log("El cliente dictó:", texto);
                 
-                // Buscar precio en lo que dijo el cliente (Ej: busca números)
-                const numeros = textoEscuchado.match(/\d+/g);
+                // Extraer el precio (busca cualquier número dicho)
+                const numeros = texto.match(/\d+/g);
                 if (numeros) {
                     card.querySelector('.precio-prod').innerText = "$" + numeros.join("");
                 }
 
-                // Buscar colores y agregarlos automáticamente
-                const listaColoresDiv = card.querySelector('.lista-colores');
-                listaColoresDiv.innerHTML = ""; // Limpiar colores anteriores
+                // Extraer colores
+                const listaColores = card.querySelector('.lista-colores');
+                listaColores.innerHTML = ""; // Limpiar anteriores
                 
-                // Diccionario de colores (Palabra hablada -> Código CSS)
-                const coloresCSS = {
+                const coloresDiccionario = {
                     "rosado": "#FFC0CB", "rosa": "#FFC0CB",
                     "celeste": "#ADD8E6", "azul": "#0000FF",
-                    "verde": "#8FBC8F",
-                    "blanco": "#FFFFFF",
-                    "negro": "#000000",
-                    "rojo": "#FF0000",
-                    "beige": "#F5F5DC"
+                    "verde": "#8FBC8F", "blanco": "#FFFFFF",
+                    "negro": "#000000", "rojo": "#FF0000",
+                    "beige": "#F5F5DC", "amarillo": "#FFD700"
                 };
 
-                // Revisar qué colores mencionó y agregar los círculos
-                let coloresEncontrados = 0;
-                for (let color in coloresCSS) {
-                    if (textoEscuchado.includes(color)) {
+                for (let color in coloresDiccionario) {
+                    if (texto.includes(color)) {
                         const circulo = document.createElement('div');
                         circulo.className = 'circulo-color';
-                        circulo.style.backgroundColor = coloresCSS[color];
-                        listaColoresDiv.appendChild(circulo);
-                        coloresEncontrados++;
+                        circulo.style.backgroundColor = coloresDiccionario[color];
+                        listaColores.appendChild(circulo);
                     }
                 }
 
-                btn.innerText = "🎤 Escuchado correctamente";
-                btn.style.background = "#E0D8D0";
-                
-                // Restaurar botón después de unos segundos
-                setTimeout(() => { btn.innerText = "🎤 Dictar Precio y Color"; }, 3000);
-            };
-
-            reconocimiento.onerror = function() {
-                btn.innerText = "❌ Error al escuchar";
-                btn.style.background = "#E0D8D0";
+                btn.innerText = "🎤 ¡Dictado Exitoso!";
+                btn.style.background = "#d4edda";
+                setTimeout(() => { btn.innerText = "🎤 Dictar Precio y Color"; btn.style.background = "#E0D8D0"; }, 3000);
             };
 
             reconocimiento.start();
